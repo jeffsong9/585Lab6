@@ -9,7 +9,7 @@ ui <- fluidPage(
                      choices = list("Bottom" = unique(beer$Fermentation)[1], "Top" =unique(beer$Fermentation)[2]), selected="Bottom"
   ),
 
-  mainPanel(
+  fixedPanel(top = 0, left = 350,
     plotlyOutput("plot_ferment")
   ),
   
