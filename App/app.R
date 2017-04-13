@@ -10,7 +10,7 @@ ui <- fluidPage(
   ),
 
   mainPanel(
-    plotOutput("plot_ferment")
+    plotlyOutput("plot_ferment")
   )
 )
 
@@ -21,8 +21,8 @@ server <- function(input, output, session) {
     beer %>% filter(Fermentation==input$FermentationType)
     })
   
-  output$plot_ferment <- renderPlot({
-     ggplot(data=select_type(), aes(x=Calories, y=ABV))+geom_point()
+  output$plot_ferment <- renderPlotly({
+     ggplot(data=select_type(), aes(x=Calories, y=ABV, labels = Brand), tooltip = c("Brand"))+geom_point()
     
   })
     
