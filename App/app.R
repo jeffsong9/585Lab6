@@ -1,3 +1,7 @@
+
+beer=read.csv("../data/beer.csv", stringsAsFactors = F)
+
+
 ui <- fluidPage(
   selectInput("dataset", "Dataset", c("diamonds", "rock", "pressure", "cars")),
   conditionalPanel( condition = "output.nrows",
