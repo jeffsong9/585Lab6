@@ -1,25 +1,31 @@
+pkg=c("tidyverse", "ggplot2", "plotly")
+sapply(pkg, require, character=T)
+
 
 beer=read.csv("../data/beer.csv", stringsAsFactors = F)
 
-
 ui <- fluidPage(
-  selectInput("dataset", "Dataset", c("diamonds", "rock", "pressure", "cars")),
-  conditionalPanel( condition = "output.nrows",
-                    checkboxInput("headonly", "Only use first 1000 rows"))
+  checkboxGroupInput("FermentationType", label = h3("Checkbox group"), 
+                     choices = list("Bottom" = unique(beer$Fermentation)[1], "Top" =unique(beer$Fermentation)[2]), selected="Bottom"
+  ),
+
+  mainPanel(
+    plotOutput("plot_ferment")
+  )
 )
+
 server <- function(input, output, session) {
-  datasetInput <- reactive({
-    switch(input$dataset,
-           "rock" = rock,
-           "pressure" = pressure,
-           "cars" = cars)
-  })
+  beer=read.csv("../data/beer.csv", stringsAsFactors = F)
   
-  output$nrows <- reactive({
-    nrow(datasetInput())
-  })
+  select_type=reactive({
+    beer %>% filter(Fermentation==input$FermentationType)
+    })
   
-  outputOptions(output, "nrows", suspendWhenHidden = FALSE)  
+  output$plot_ferment <- renderPlot({
+     ggplot(data=select_type(), aes(x=Calories, y=ABV))+geom_point()
+    
+  })
+    
 }
 
 shinyApp(ui, server)
